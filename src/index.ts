@@ -36,11 +36,41 @@ fastify.post('/api/orders/execute', async (request, reply) => {
 });
 
 // ✅ WebSocket endpoint
-// fastify.get('/ws', { websocket: true }, (connection: WebSocket, req: FastifyRequest) => {
-//   connection.on('message', (msg: string | Buffer) => {
-//     console.log(msg.toString());
-//   });
-// });
+fastify.get('/ws', { websocket: true }, (socket: WebSocket, req: FastifyRequest) => {
+  const orderId = (req.query as any)?.orderId;
+  
+  if (!orderId) {
+    socket.close(1008, 'Missing orderId query parameter');
+    return;
+  }
+  
+  // Register the WebSocket connection
+  wsConnections.set(orderId, socket);
+  fastify.log.info(`🔌 WebSocket connected for orderId: ${orderId}`);
+
+  // Send welcome message
+  socket.send(JSON.stringify({ 
+    orderId, 
+    status: 'connected', 
+    message: 'WebSocket connection established' 
+  }));
+
+  // Handle connection close - cleanup
+  socket.on('close', () => {
+    wsConnections.delete(orderId);
+    fastify.log.info(`🔌 WebSocket disconnected for orderId: ${orderId}`);
+  });
+
+  // Handle incoming messages (optional - for ping/pong or other commands)
+  socket.on('message', (msg: string | Buffer) => {
+    try {
+      const data = JSON.parse(msg.toString());
+      fastify.log.debug(`📨 WebSocket message from ${orderId}:`, data);
+    } catch (err) {
+      fastify.log.warn(`Invalid WebSocket message from ${orderId}`);
+    }
+  });
+});
 
 // ✅ Function to send WebSocket updates
 function sendWsUpdate(orderId: string, status: string, data?: any) {
