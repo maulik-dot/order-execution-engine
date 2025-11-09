@@ -329,6 +329,39 @@ Edit `src/queue/orderQueue.ts` and `src/index.ts` to change Redis connection set
 
 ## 🧪 Testing
 
+### Automated Tests
+
+The project includes **25+ comprehensive tests** covering routing logic, queue behavior, and WebSocket lifecycle.
+
+**Run tests:**
+```bash
+npm test              # Run all tests
+npm run test:watch    # Run in watch mode
+npm run test:coverage # Run with coverage report
+```
+
+**Test Coverage:**
+- ✅ **10 tests** - Routing logic (DEX price comparison, best route selection)
+- ✅ **5 tests** - Queue behavior (concurrent orders, persistence)
+- ✅ **6 tests** - WebSocket lifecycle (connection, updates, disconnection)
+- ✅ **4 tests** - Integration tests (end-to-end order processing)
+
+See [TESTING.md](./TESTING.md) for detailed test documentation.
+
+### Postman/Insomnia Collection
+
+A ready-to-use API collection is available at `postman_collection.json`:
+
+**Import into Postman/Insomnia:**
+1. Open Postman/Insomnia
+2. Import → Select `postman_collection.json`
+3. All endpoints are pre-configured
+
+**Collection includes:**
+- Health check endpoint
+- Order submission (success and error cases)
+- WebSocket connection examples
+
 ### Manual Testing
 
 1. **Test Order Submission**:

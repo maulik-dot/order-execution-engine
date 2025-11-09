@@ -1,0 +1,153 @@
+{
+	"info": {
+		"_postman_id": "order-execution-engine-collection",
+		"name": "Order Execution Engine API",
+		"description": "Collection for testing the Order Execution Engine API endpoints",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Health Check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3001/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						""
+					]
+				},
+				"description": "Health check endpoint to verify server is running"
+			},
+			"response": []
+		},
+		{
+			"name": "Submit Order",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"tokenIn\": \"USDC\",\n  \"tokenOut\": \"SOL\",\n  \"amount\": 100\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3001/api/orders/execute",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"orders",
+						"execute"
+					]
+				},
+				"description": "Submit a new order for execution"
+			},
+			"response": []
+		},
+		{
+			"name": "Submit Order - Missing Fields",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"tokenIn\": \"USDC\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3001/api/orders/execute",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"orders",
+						"execute"
+					]
+				},
+				"description": "Test error handling for missing required fields"
+			},
+			"response": []
+		},
+		{
+			"name": "WebSocket Connection",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "ws://localhost:3001/ws?orderId={{orderId}}",
+					"protocol": "ws",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"ws"
+					],
+					"query": [
+						{
+							"key": "orderId",
+							"value": "{{orderId}}",
+							"description": "Order ID to track"
+						}
+					]
+				},
+				"description": "WebSocket connection for real-time order updates. Note: This requires a WebSocket client. Use wscat or a WebSocket testing tool."
+			},
+			"response": []
+		},
+		{
+			"name": "WebSocket Connection - Missing OrderId",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "ws://localhost:3001/ws",
+					"protocol": "ws",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"ws"
+					]
+				},
+				"description": "Test WebSocket error handling when orderId is missing"
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "orderId",
+			"value": "",
+			"type": "string"
+		},
+		"baseUrl",
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3001",
+			"type": "string"
+		}
+	]
+}
+
